@@ -14,9 +14,10 @@ return function (ContainerBuilder $containerBuilder) {
         $settings = array_replace_recursive($settings, YamlHelper::parseYaml($localSettings));
     }
 
-    // finally merge from environment
-    if (!empty($_ENV['DATA_DIR'])) {
-        $settings['settings']['dataDir'] = $_ENV['DATA_DIR'];
+    // finally merge from environment (dotenv manages .env files)
+    // $_ENV does not seem to work in (at least some) GitHub runners
+    if (!empty(getenv('DATA_DIR'))) {
+        $settings['settings']['dataDir'] = getenv('DATA_DIR');
     }
 
     $containerBuilder->addDefinitions($settings);
